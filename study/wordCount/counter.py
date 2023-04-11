@@ -1,5 +1,6 @@
 
 import os
+import sys
 from collections import Counter
 
 
@@ -12,11 +13,19 @@ with open(fileName, encoding="utf-8") as file:
 	file_data = file.read()
 
 
-# 文字列がどんな文字でできているか、カウント(重複含む)
-myword = file_data
-mycounter = Counter(myword)
+# ファイルの中身を格納する辞書を定義
+file_char = {} 
 
 
-# 結果出力
-print(mycounter)
+# 変数charにファイルの中身を出力し、ファイルから取得したキーが重複している場合、値に1を加算する
+for char in file_data:
+	if (char in file_char):
+		file_char[char] += 1
 
+	else:
+		file_char[char] = 1
+
+
+# 辞書のキーをリストに変換して、要素数文回す
+for file_charlist in file_char.keys():
+	print(file_charlist + ":" + str(file_char[file_charlist]))
