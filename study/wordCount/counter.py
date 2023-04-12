@@ -1,12 +1,12 @@
 
 import os
 import sys
-from collections import Counter
 
 
 # 引数にテキストファイル名を指定しテキストファイル取得
-path = "C:/Users/user/Documents/study/wordCount/sample.txt"
+path = sys.argv[1]
 fileName = os.path.basename(path)
+
 
 # ファイルの中身の文字列を取得
 with open(fileName, encoding="utf-8") as file:
@@ -26,6 +26,36 @@ for char in file_data:
 		file_char[char] = 1
 
 
-# 辞書のキーをリストに変換して、要素数文回す
-for file_charlist in file_char.keys():
-	print(file_charlist + ":" + str(file_char[file_charlist]))
+# 辞書のキーをリストに取り出す
+file_charlist = list(file_char.keys())
+fc = file_charlist
+
+
+# 辞書の値ををリストに取り出す
+file_valuelist = list(file_char.values())
+fv = file_valuelist
+
+
+# 要素番号の0番目とそれ以降を一つずつ比較し、先頭に最大の値が来るようにする
+i = 0
+while i < len(fv):
+	j = 1
+
+	while j < len(fv) - i:
+		if fv[i] < fv[i+j]:
+			cmtpval = fv[i]
+			cmtpkey = fc[i]
+			fv[i] = fv[i+j]
+			fc[i] = fc[i+j]
+			fv[i+j] = cmtpval
+			fc[i+j] = cmtpkey
+			j += 1
+		else:
+			j += 1
+
+	i += 1
+
+
+# 結果出力
+for i in range(len(fc)):
+	print(fc[i] + ":" + str(fv[i]))
