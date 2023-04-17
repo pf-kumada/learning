@@ -18,35 +18,37 @@ for file in path_list:
 """
 file_word = {}
 tmp = ""
+file_set = set()
 
 # フォルダ内のファイルを全て取得する(with使わない)
 for i in range(len(path_list)):
-    with open(path_list[i], encoding="utf-8") as file:
-        file_data = file.read()
+   with open(path_list[i], encoding="utf-8") as file:
+    file_data = file.read()
 
+fs = file_set.add(path_list[i])
 
 
 
 # ファイルの中身を1文字ずつ取り出す
     for char in file_data:
 # スペースだった場合、スペースまでのcharを1つの単語にして、file_wordのキーに設定し、値に1を加算する。
-        if(char == " " or char == "," or char == ":" or char == "\n" or char == "、" or char == "。" or char == ";"):
+        if(char == " " or char == "," or char == ":" or char == "\n" or char == "、" or char == "。" or char == ";" or char == "[" or char =="'"):
             if(tmp in file_word):
-                    file_word[tmp] = [file_word[tmp][0] + 1, {file_word[tmp][1]}.add(path_list[i])]
+                    file_word[tmp] = [file_word[tmp][0] + 1, file_word[tmp][1].add(path_list[i])]  
 
             else:
-                    file_word[tmp] = [1, {file_word[tmp][1]}.add(path_list[i])]
+                    file_word[tmp] = [1, file_set[i]]
             tmp = ""            
         else:
                 tmp += char        
+# ファイル単位で区切るようにする
     if not tmp == "":
         if(tmp in file_word):
-            file_word[tmp] = [file_word[tmp][0] + 1, {file_word[tmp][1]}.add(path_list[i])]
+            file_word[tmp] = [file_word[tmp][0] + 1, file_word[tmp][1].add(path_list[i])]
             tmp = ""  
         else:
-            file_word[tmp] = [1, {file_word[tmp][1]}.add(path_list[i])]
-            tmp = ""     
-
+            file_word[tmp] = [1, file_set.add(path_list[i])]
+            tmp = ""
 
 # 辞書のキーをリストに取り出す
 file_keylist = list(file_word.keys())
