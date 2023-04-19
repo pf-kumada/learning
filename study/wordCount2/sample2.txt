@@ -1,16 +1,10 @@
 from wsgiref.simple_server import make_server
-
-
-
 class App:
-
   def __call__(self, env, start_response):
     start_response('200 OK', [('Content-type', 'text/plain; charset=utf-8')])
     return [b'Hello, World.']
 
-
 app = APP()
-
 
 if __name__ == '__main__':
     httpd = make_server('', 5000, app)
