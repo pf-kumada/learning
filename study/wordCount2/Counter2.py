@@ -24,14 +24,15 @@ for i in range(len(path_list)):
     file = open(path_list[i], "r", encoding="utf-8")
     file_data = file.read()
     file.close()
-
+    
     # ファイルの中身を1文字ずつ取り出す
     for char in file_data:
 
+        x = ord(char)
         # スペースだった場合、スペースまでのcharを1つの単語にして、file_wordのキーに設定し、値に1を加算する
         # 各単語に対してどのファイルから吐き出されたものなのかそれぞれ辞書の値（リスト）の[1]要素目に出力する
-        if(char == " " or char == "," or char == ":" or char == "\n" or
-           char == "、" or char == "。" or char == ";" or char == "[" or char == "'"):
+        if(x != 45 and x != 95 and x <= 47 or 58 
+           <= x <= 64 or 91 <= x <= 96 or 123 <= x <= 127):
             if(tmp in file_word):
                 # 返り値None(file_wordの中には追加はされている)
                 file_word[tmp][1].add(path_list[i])
@@ -101,6 +102,6 @@ for i in range(len(fk)):
 
 
 # 完成までに足らないもの
-# ・単語の区切りの条件式を手動で限定しない（半角英数字、ハイフン、アンダースコア以外で判別（バイトコード使う））
 # ・出力の表示結果の変更
 # ・関数にまとめる
+# ・日本語除外
