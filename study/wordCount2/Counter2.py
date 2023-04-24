@@ -1,9 +1,11 @@
-import glob
+import os
+import sys
 
 print("------------------------------------------------------------------------------------")
 
 # 指定したフォルダ内において、txtファイル一覧を取得する
-path_list = glob.glob("*.txt")
+path = sys.argv[1]
+path_list = os.listdir(path)
 print(path_list)
 
 # ループ内で使用する変数を定義する
@@ -12,6 +14,17 @@ tmp = ""
 file_first = set()
 file_escape = set()
 
+# 辞書の値を設定する関数定義（2回目以降）
+def add_first(file_first, path_list, i, file_escape, file_word, tmp):
+    file_first.add(path_list[i])
+    file_escape = file_first.copy()
+    file_word[tmp] = [1, file_escape]
+
+# 辞書の値を設定する関数定義（初回）
+def add_second(file_word, tmp, path_list, i):
+    file_word[tmp][1].add(path_list[i])
+    file_word[tmp][0] = file_word[tmp][0] + 1
+
 # フォルダ内のファイルを全て取得する
 """
 # withを使用する場合
@@ -19,12 +32,13 @@ for i in range(len(path_list)):
    with open(path_list[i], encoding="utf-8") as file:
     file_data = file.read()
 """
+
 # withを使用しない場合
 for i in range(len(path_list)):
-    file = open(path_list[i], "r", encoding="utf-8")
+    file = open(path + "\\" + path_list[i], encoding="utf-8")
     file_data = file.read()
     file.close()
-    
+
     # ファイルの中身を1文字ずつ取り出す
     for char in file_data:
 
@@ -34,17 +48,13 @@ for i in range(len(path_list)):
         if(x != 45 and x != 95 and x <= 47 or 58 
            <= x <= 64 or 91 <= x <= 96 or 123 <= x <= 127):
             if(tmp in file_word):
-                # 返り値None(file_wordの中には追加はされている)
-                file_word[tmp][1].add(path_list[i])
-                file_word[tmp][0] = file_word[tmp][0] + 1
+                add_second(file_word, tmp, path_list, i)
             # 半角スペースが二回以上続いた場合を考慮する
             elif(tmp == ""):
                 continue
             # 単語が一回目の出現の場合
             else:
-                file_first.add(path_list[i])
-                file_escape = file_first.copy()
-                file_word[tmp] = [1, file_escape]
+                add_first(file_first, path_list, i, file_escape, file_word, tmp)
             # 文字を格納する為のtmp、一回目の単語が出現したファイル名を格納するfile_firstの中身を空にする
             tmp = ""
             file_first.discard(path_list[i])
@@ -56,13 +66,10 @@ for i in range(len(path_list)):
     # 改行などが入っていない場合、ファイルが連結されてしまうのでファイル単位で区切るようにする
     if not tmp == "":
         if(tmp in file_word):
-            file_word[tmp][1].add(path_list[i])
-            file_word[tmp][0] = file_word[tmp][0] + 1
+            add_second(file_word, tmp, path_list, i)
             tmp = ""
         else:
-            file_first.add(path_list[i])
-            file_escape = file_first.copy()
-            file_word[tmp] = [1, file_escape]
+            add_first(file_first, path_list, i, file_escape, file_word, tmp)
             tmp = ""
             file_first.discard(path_list[i])
 
@@ -96,12 +103,10 @@ while i < len(fv):
 
 # 結果出力
 for i in range(len(fk)):
-    print(fk[i] + ":" + str(fv[i]))
-
-
+    print("[単語]:" + fk[i] + "[出現回数]:" + str(fv[i][0]))
+    for path in fv[i][1]:
+        print("    [ファイル名]:" + path)
 
 
 # 完成までに足らないもの
-# ・出力の表示結果の変更
-# ・関数にまとめる
-# ・日本語除外
+# ・アンダースコア考慮できていない→調査中
