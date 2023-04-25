@@ -30,7 +30,7 @@ def add_second(file_word, tmp, path_list, i):
 # withを使用する場合
 for i in range(len(path_list)):
    with open(path_list[i], encoding="utf-8") as file:
-    file_data = file.read()
+        file_data = file.read()
 """
 
 # withを使用しない場合
@@ -45,8 +45,8 @@ for i in range(len(path_list)):
         x = ord(char)
         # スペースだった場合、スペースまでのcharを1つの単語にして、file_wordのキーに設定し、値に1を加算する
         # 各単語に対してどのファイルから吐き出されたものなのかそれぞれ辞書の値（リスト）の[1]要素目に出力する
-        if(x != 45 and x != 95 and x <= 47 or 58 
-           <= x <= 64 or 91 <= x <= 96 or 123 <= x <= 127):
+        if(x != 45 and x <= 47 or 58 
+           <= x <= 64 or 91 <= x <= 94 or x == 96 or 123 <= x <= 127):
             if(tmp in file_word):
                 add_second(file_word, tmp, path_list, i)
             # 半角スペースが二回以上続いた場合を考慮する
@@ -106,7 +106,3 @@ for i in range(len(fk)):
     print("[単語]:" + fk[i] + "[出現回数]:" + str(fv[i][0]))
     for path in fv[i][1]:
         print("    [ファイル名]:" + path)
-
-
-# 完成までに足らないもの
-# ・アンダースコア考慮できていない→調査中
