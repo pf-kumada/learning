@@ -5,4 +5,4 @@
 日本語は考慮していない。
 
 (例)
-$ python counter.py C:\Users\user\Documents\learning\study\sampledata
+$ python Counter2.py C:\Users\user\Documents\learning\study\sampledata
