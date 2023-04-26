@@ -5,9 +5,6 @@ print("-------------------------------------------------------------------------
 
 # 指定したフォルダ内において、txtファイル一覧を取得する
 path = sys.argv[1]
-path_list = os.listdir(path)
-print(path_list)
-
 
 # ループ内で使用する変数を定義する
 file_word = {}
@@ -16,17 +13,17 @@ file_first = set()
 file_escape = set()
 
 # 辞書の値を設定する関数定義（初回）
-def add_first(file_first, files_list, i, file_escape, file_word, tmp):
-    file_first.add(files_list[i])
+def add_first(file_first, current_dir, files_list, i, file_escape, file_word, tmp):
+    file_first.add(os.path.join(current_dir,files_list[i]))
     file_escape = file_first.copy()
     file_word[tmp] = [1, file_escape]
 
 # 辞書の値を設定する関数定義（二回目以降）
-def add_second(file_word, tmp, files_list, i):
-    file_word[tmp][1].add(files_list[i])
+def add_second(file_word, tmp, current_dir, files_list, i):
+    file_word[tmp][1].add(os.path.join(current_dir,files_list[i]))
     file_word[tmp][0] = file_word[tmp][0] + 1
 
-# フォルダ内のファイルを全て取得する
+# フォルダ内、サブフォルダ内のファイルを全て取得する
 """
 # withを使用する場合
 for i in range(len(path_list)):
@@ -53,13 +50,13 @@ for current_dir, sub_dirs, files_list in os.walk(path):
                 if(x != 45 and x <= 47 or 58 
                 <= x <= 64 or 91 <= x <= 94 or x == 96 or 123 <= x <= 127):
                     if(tmp in file_word):
-                        add_second(file_word, tmp, files_list, i)
+                        add_second(file_word, tmp, current_dir, files_list, i)
                     # 半角スペースが二回以上続いた場合を考慮する
                     elif(tmp == ""):
                         continue
                     # 単語が一回目の出現の場合
                     else:
-                        add_first(file_first, files_list, i, file_escape, file_word, tmp)
+                        add_first(file_first, current_dir, files_list, i, file_escape, file_word, tmp)
                     # 文字を格納する為のtmp、一回目の単語が出現したファイル名を格納するfile_firstの中身を空にする
                     tmp = ""
                     file_first.discard(files_list[i])
@@ -71,10 +68,10 @@ for current_dir, sub_dirs, files_list in os.walk(path):
             # 改行などが入っていない場合、ファイルが連結されてしまうのでファイル単位で区切るようにする
             if not tmp == "":
                 if(tmp in file_word):
-                    add_second(file_word, tmp, files_list, i)
+                    add_second(file_word, tmp, current_dir, files_list, i)
                     tmp = ""
                 else:
-                    add_first(file_first, files_list, i, file_escape, file_word, tmp)
+                    add_first(file_first, current_dir, files_list, i, file_escape, file_word, tmp)
                     tmp = ""
                     file_first.discard(files_list[i])
 
@@ -111,6 +108,3 @@ for i in range(len(fk)):
     print("[単語]:" + fk[i] + "[出現回数]:" + str(fv[i][0]))
     for path in fv[i][1]:
         print("    [ファイル名]:" + path)
-
-# 対象のものはテキストファイルのみ、それ以外は無視する→OK
-# サブフォルダの中身のテキストファイルも対象
