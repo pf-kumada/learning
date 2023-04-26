@@ -3,8 +3,9 @@ import sys
 
 print("------------------------------------------------------------------------------------")
 
-# 指定したフォルダ内において、txtファイル一覧を取得する
-path = sys.argv[1]
+# 指定したフォルダ名を変数pathに格納する
+#path = sys.argv[1]
+path = "C:/Users/user/Documents/learning/study/wordCount2text"
 
 # ループ内で使用する変数を定義する
 file_word = {}
@@ -39,6 +40,7 @@ for current_dir, sub_dirs, files_list in os.walk(path):
             file = open(os.path.join(current_dir,files_list[i]), encoding="utf-8")
             file_data = file.read()
             file.close()
+            print(os.path.join(current_dir,files_list[i]))
 
 
     # ファイルの中身を1文字ずつ取り出す
@@ -59,7 +61,7 @@ for current_dir, sub_dirs, files_list in os.walk(path):
                         add_first(file_first, current_dir, files_list, i, file_escape, file_word, tmp)
                     # 文字を格納する為のtmp、一回目の単語が出現したファイル名を格納するfile_firstの中身を空にする
                     tmp = ""
-                    file_first.discard(files_list[i])
+                    file_first.discard(os.path.join(current_dir,files_list[i]))
 
                 # tmpに一文字追加する
                 else:
@@ -73,7 +75,7 @@ for current_dir, sub_dirs, files_list in os.walk(path):
                 else:
                     add_first(file_first, current_dir, files_list, i, file_escape, file_word, tmp)
                     tmp = ""
-                    file_first.discard(files_list[i])
+                    file_first.discard(os.path.join(current_dir,files_list[i]))
 
 # 辞書のキーをリストに取り出す
 file_keylist = list(file_word.keys())
@@ -106,5 +108,5 @@ while i < len(fv):
 # 結果出力
 for i in range(len(fk)):
     print("[単語]:" + fk[i] + "[出現回数]:" + str(fv[i][0]))
-    for path in fv[i][1]:
-        print("    [ファイル名]:" + path)
+    for pathname in fv[i][1]:
+        print("    [ファイル名]:" + pathname)
